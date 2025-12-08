@@ -10,5 +10,5 @@ FROM eclipse-temurin:17-jre-alpine
 
 COPY --from=builder /app/target/*.jar /app/bankapp.jar
 
-EXPOSE 8080
+EXPOSE 8082
 CMD ["java", "-jar", "/app/bankapp.jar"]
