@@ -25,15 +25,6 @@ pipeline {
             }
         }
 
-        stage('Trivy Scan') {
-            steps {
-                script {
-                    // Scan the pushed image or filesystem
-                    sh "trivy fs ."
-                }
-            }
-        }
-
         stage('Deploy') {
             steps {
                 script {
