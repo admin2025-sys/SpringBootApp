@@ -3,7 +3,7 @@ pipeline {
 
     stages {
 
-        stage('code clone') {
+        stage('Code Clone') {
             steps {
                 git url: "https://github.com/admin2025-sys/SpringBootApp.git", branch: "main"
             }
@@ -25,11 +25,26 @@ pipeline {
             }
         }
 
-        stage("Deploy") {
+        stage('Trivy Scan') {
+            steps {
+                script {
+                    // Scan the pushed image for vulnerabilities
+                    sh "trivy image --exit-code 1 --severity HIGH,CRITICAL $dockerHubUser/bankapp:latest"
+                }
+            }
+        }
+
+        stage('Deploy') {
             steps {
                 sh "docker compose down || true"
                 sh "docker compose up -d"
             }
+        }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
