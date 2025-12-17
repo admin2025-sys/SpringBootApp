@@ -18,7 +18,7 @@ pipeline {
                         passwordVariable: "dockerHubPass"
                     )
                 ]) {
-                    sh 'echo $dockerHubPass | docker login -u $dockerHubUser --password-stdin'
+                    sh "echo $dockerHubPass | docker login -u $dockerHubUser --password-stdin"
                     sh "docker image tag bankappdemo:latest $dockerHubUser/bankapp:latest"
                     sh "docker push $dockerHubUser/bankapp:latest"
                 }
@@ -28,7 +28,7 @@ pipeline {
         stage('Trivy Scan') {
             steps {
                 script {
-                    // Scan the pushed image for vulnerabilities
+                    // Scan the pushed image or filesystem
                     sh "trivy fs ."
                 }
             }
@@ -36,8 +36,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh "docker compose down || true"
-                sh "docker compose up -d"
+                script {
+                    sh "docker compose down || true"
+                    sh "docker compose up -d"
+                }
             }
         }
     }
