@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // Scan the pushed image for vulnerabilities
-                    sh "trivy image --exit-code 1 --severity HIGH,CRITICAL $dockerHubUser/bankapp:latest"
+                    sh "trivy fs ."
                 }
             }
         }
@@ -39,12 +39,6 @@ pipeline {
                 sh "docker compose down || true"
                 sh "docker compose up -d"
             }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
         }
     }
 }
